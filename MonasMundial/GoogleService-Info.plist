@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>491069906491-g9ilov606qd5co5csc6ldeu3hf701fif.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.491069906491-g9ilov606qd5co5csc6ldeu3hf701fif</string>
+	<key>API_KEY</key>
+	<string>AIzaSyB0dMy1lq8QM3PpDQfGryWG3f-YH-s1y9A</string>
+	<key>GCM_SENDER_ID</key>
+	<string>491069906491</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>mateo.MonasMundial</string>
+	<key>PROJECT_ID</key>
+	<string>monasmundial-b0e8b</string>
+	<key>STORAGE_BUCKET</key>
+	<string>monasmundial-b0e8b.firebasestorage.app</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:491069906491:ios:fdfe43d2b1e8b2e7d7061e</string>
+</dict>
+</plist>
