@@ -6,13 +6,13 @@
 //
 
 import SwiftUI
-import FirebaseCore
-import GoogleSignIn // No olvides importar esto aquí también
+
+
 
 class AppDelegate: NSObject, UIApplicationDelegate {
     func application(_ application: UIApplication,
                      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
-        FirebaseApp.configure()
+        
         return true
     }
 }

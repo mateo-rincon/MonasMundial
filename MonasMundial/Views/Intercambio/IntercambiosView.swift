@@ -102,55 +102,8 @@ struct IntercambiosView: View {
         }
     }
     
-    // Función generateQRCode (la misma que ya tienes...)
 }
 
-// MARK: - PREVIEW 🔥
-#Preview {
-    // 1. Creamos un VM de prueba
-    let vm = StickersViewModel()
-    
-    // 2. Simulamos un resultado de match exitoso
-    let sampleResult = (
-        theyCanGiveMe: ["ARG10", "BRA9", "COL1", "MEX4"], // Van en Cian
-        iCanGiveThem: ["USA7", "GER13", "FRA2"]            // Van en Verde
-    )
-    
-    // 3. Pasamos el resultado simulado a la vista principal
-    let view = IntercambiosView(vm: vm)
-    
-    // Usamos `onAppear` en el preview para forzar el estado inicial
-    return view.onAppear {
-        // Engañamos a la vista para que crea que acaba de escanear un código
-        // y muestre el componente MatchResultView inmediatamente.
-        // matchResult = sampleResult // <- Esto no funciona directamente en #Preview
-    }
-    // Una forma más limpia de testear el estado con resultados es usar un contenedor de preview
-    PreviewContainer(vm: vm, result: sampleResult)
-}
 
-// Contenedor especial para testear estados complejos en el Preview Canvas
-struct PreviewContainer: View {
-    @ObservedObject var vm: StickersViewModel
-    @State private var result: (theyCanGiveMe: [String], iCanGiveThem: [String])?
-    
-    init(vm: StickersViewModel, result: (theyCanGiveMe: [String], iCanGiveThem: [String])?) {
-        self.vm = vm
-        self._result = State(initialValue: result)
-    }
-    
-    var body: some View {
-        // Replicamos la estructura pero forzando el estado del matchResult
-        ZStack {
-            // Fondo azul del Dashboard
-            LinearGradient(colors: [Color.mundialBlue.opacity(0.8)], startPoint: .top, endPoint: .bottom).ignoresSafeArea()
-            
-            // IntercambiosView con el estado modificado
-            IntercambiosView(vm: vm)
-                .onAppear {
-                    // Sobreescribimos el estado interno de la vista para el preview
-                    // Esto es un truco avanzado de SwiftUI para previews estáticos.
-                }
-        }
-    }
-}
+
+

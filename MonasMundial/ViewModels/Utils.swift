@@ -9,7 +9,7 @@ import Foundation
 func countryPrefix(from country: String) -> String {
     
     let custom: [String: String] = [
-        "Especiales": "SPC",
+        "FWC": "FWC",
         "México": "MEX",
         "Sudáfrica": "RSA",
         "Corea del Sur": "KOR",

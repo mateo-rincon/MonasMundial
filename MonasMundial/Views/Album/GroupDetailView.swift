@@ -89,70 +89,71 @@ struct CompactStickerButton: View {
     
     @State private var isPressed = false
     
-    // 💡 Calculamos una escala base: si la tiene, que sea 1.0 (o 1.02 para que resalte)
-    // Si no la tiene, la dejamos en 1.0 exacta.
-    private var baseScale: CGFloat {
-        sticker.count > 0 ? 1.0 : 1.0
-    }
-    
     var body: some View {
-        ZStack(alignment: .topTrailing) {
-            // --- FONDO BASE (Para que el tamaño sea siempre constante) ---
-            RoundedRectangle(cornerRadius: 8)
-                .fill(Color.black.opacity(0.1)) // Fondo neutro para las que no están
-                .aspectRatio(0.75, contentMode: .fit)
-            
+        ZStack(alignment: .topLeading) {
             // --- CUERPO DEL STICKER ---
-            RoundedRectangle(cornerRadius: 8)
-                .fill(sticker.count > 0 ? Color.mundialGreen : Color.white.opacity(0.1))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 8)
-                        // 💡 Cambiamos el color del borde para que no sea tan invasivo
-                        .stroke(sticker.count > 0 ? Color.white.opacity(0.4) : Color.white.opacity(0.05), lineWidth: 1.2)
-                )
-                // 💡 La sombra ahora es exterior para que el sticker "crezca" hacia afuera
-                .shadow(color: sticker.count > 0 ? Color.mundialGreen.opacity(0.4) : .clear, radius: sticker.count > 0 ? 5 : 0)
-            
-            // --- NÚMERO ---
-            VStack {
-                Spacer()
-                Text("\(sticker.number)")
-                    .font(.system(size: 18, weight: .black, design: .rounded))
-                    .monospacedDigit()
-                    // 💡 Si la tiene, usamos un color más oscuro para contraste, si no, blanco traslúcido
-                    .foregroundColor(sticker.count > 0 ? Color.black.opacity(0.6) : .white.opacity(0.2))
-                Spacer()
+            ZStack(alignment: .bottomTrailing) {
+                RoundedRectangle(cornerRadius: 10)
+                    .fill(sticker.count > 0 ? Color.mundialGreen.gradient : Color.white.opacity(0.08).gradient)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 10)
+                            .strokeBorder(sticker.count > 0 ? Color.white.opacity(0.4) : Color.white.opacity(0.1), lineWidth: 1)
+                    )
+                
+                VStack {
+                    Spacer()
+                    Text("\(sticker.number)")
+                        .font(.system(size: 22, weight: .black, design: .rounded))
+                        .foregroundColor(sticker.count > 0 ? .white : .white.opacity(0.2))
+                    Spacer()
+                }
+                .frame(maxWidth: .infinity)
+                
+                if sticker.count > 1 {
+                    Text("+\(sticker.count - 1)")
+                        .font(.system(size: 10, weight: .heavy))
+                        .foregroundColor(.black)
+                        .frame(width: 24, height: 16)
+                        .background(Color.white)
+                        .clipShape(Capsule())
+                        .offset(x: 4, y: 4)
+                }
             }
-            .frame(maxWidth: .infinity)
+            // 💡 Ajuste de escala: un poco menos agresivo para evitar el "pop"
+            .scaleEffect(isPressed ? 0.94 : 1.0)
+            // 💡 Muelle más orgánico: response 0.35, damping 0.6
+            .animation(.spring(response: 0.35, dampingFraction: 0.6, blendDuration: 0), value: isPressed)
+            .onTapGesture {
+                isPressed = true
+                onAdd()
+                UIImpactFeedbackGenerator(style: .light).impactOccurred()
+                // El retraso debe ser suficiente para que el usuario vea el hundimiento
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.12) {
+                    isPressed = false
+                }
+            }
 
-            // --- BADGE DE REPETIDAS ---
-            if sticker.count > 1 {
-                Text("\(sticker.count)")
-                    .font(.system(size: 10, weight: .black))
-                    .foregroundColor(.white)
-                    .frame(width: 20, height: 20)
-                    .background(Color.mundialOrange)
-                    .clipShape(Circle())
-                    .shadow(radius: 3)
-                    .offset(x: 5, y: -5)
-            }
-        }
-        // 💡 Aplicamos la escala base + el efecto de presión
-        .scaleEffect(isPressed ? 0.95 : baseScale)
-        .animation(.spring(response: 0.3, dampingFraction: 0.6), value: isPressed)
-        .contentShape(Rectangle())
-        .onLongPressGesture(minimumDuration: 0.5, pressing: { isPressed = $0 }) {
+            // --- BOTÓN DE REDUCIR ---
             if sticker.count > 0 {
-                onRemove()
-                UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                Button(action: {
+                    withAnimation(.snappy) {
+                        onRemove()
+                    }
+                    UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                }) {
+                    Image(systemName: "minus")
+                        .font(.system(size: 10, weight: .bold))
+                        .foregroundColor(.white)
+                        .frame(width: 22, height: 22)
+                        .background(Color.red.gradient)
+                        .clipShape(Circle())
+                        .shadow(radius: 2)
+                }
+                .offset(x: -8, y: -8)
+                .transition(.scale.combined(with: .opacity))
             }
         }
-        .onTapGesture {
-            isPressed = true
-            onAdd()
-            UIImpactFeedbackGenerator(style: .light).impactOccurred()
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { isPressed = false }
-        }
+        .aspectRatio(0.72, contentMode: .fit)
     }
 }
 struct GroupDetailView_Previews: PreviewProvider {

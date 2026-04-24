@@ -6,16 +6,6 @@
 	objectVersion = 77;
 	objects = {
 
-/* Begin PBXBuildFile section */
-		A21A33DB2F7A0065005E5098 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = A21A33DA2F7A0065005E5098 /* FirebaseAnalytics */; };
-		A21A33DD2F7A0065005E5098 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = A21A33DC2F7A0065005E5098 /* FirebaseAuth */; };
-		A21A33DF2F7A0065005E5098 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = A21A33DE2F7A0065005E5098 /* FirebaseFirestore */; };
-		A21A33E12F7A0065005E5098 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = A21A33E02F7A0065005E5098 /* FirebaseMessaging */; };
-		A21A33E32F7A0065005E5098 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = A21A33E22F7A0065005E5098 /* FirebaseStorage */; };
-		A21A33EC2F7A0234005E5098 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = A21A33EB2F7A0234005E5098 /* GoogleSignIn */; };
-		A21A33EE2F7A0234005E5098 /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = A21A33ED2F7A0234005E5098 /* GoogleSignInSwift */; };
-/* End PBXBuildFile section */
-
 /* Begin PBXFileReference section */
 		A21A33C92F79FDC9005E5098 /* MonasMundial.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MonasMundial.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -46,13 +36,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A21A33E12F7A0065005E5098 /* FirebaseMessaging in Frameworks */,
-				A21A33DB2F7A0065005E5098 /* FirebaseAnalytics in Frameworks */,
-				A21A33EE2F7A0234005E5098 /* GoogleSignInSwift in Frameworks */,
-				A21A33DD2F7A0065005E5098 /* FirebaseAuth in Frameworks */,
-				A21A33E32F7A0065005E5098 /* FirebaseStorage in Frameworks */,
-				A21A33DF2F7A0065005E5098 /* FirebaseFirestore in Frameworks */,
-				A21A33EC2F7A0234005E5098 /* GoogleSignIn in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -95,13 +78,6 @@
 			);
 			name = MonasMundial;
 			packageProductDependencies = (
-				A21A33DA2F7A0065005E5098 /* FirebaseAnalytics */,
-				A21A33DC2F7A0065005E5098 /* FirebaseAuth */,
-				A21A33DE2F7A0065005E5098 /* FirebaseFirestore */,
-				A21A33E02F7A0065005E5098 /* FirebaseMessaging */,
-				A21A33E22F7A0065005E5098 /* FirebaseStorage */,
-				A21A33EB2F7A0234005E5098 /* GoogleSignIn */,
-				A21A33ED2F7A0234005E5098 /* GoogleSignInSwift */,
 			);
 			productName = MonasMundial;
 			productReference = A21A33C92F79FDC9005E5098 /* MonasMundial.app */;
@@ -115,7 +91,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 2630;
-				LastUpgradeCheck = 2630;
+				LastUpgradeCheck = 2640;
 				TargetAttributes = {
 					A21A33C82F79FDC9005E5098 = {
 						CreatedOnToolsVersion = 26.3;
@@ -132,8 +108,6 @@
 			mainGroup = A21A33C02F79FDC9005E5098;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				A21A33D92F7A0065005E5098 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
-				A21A33EA2F7A0234005E5098 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = A21A33CA2F79FDC9005E5098 /* Products */;
@@ -225,6 +199,7 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -282,6 +257,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -299,7 +275,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = MonasMundial/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.entertainment";
-				INFOPLIST_KEY_NSCameraUsageDescription = "Necesitamos la camara para poder leer codigos QR";
+				INFOPLIST_KEY_NSCameraUsageDescription = "QR code scanning is necessary to exachange your stickers with your peers";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -335,7 +311,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = MonasMundial/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.entertainment";
-				INFOPLIST_KEY_NSCameraUsageDescription = "Necesitamos la camara para poder leer codigos QR";
+				INFOPLIST_KEY_NSCameraUsageDescription = "QR code scanning is necessary to exachange your stickers with your peers";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -381,63 +357,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCRemoteSwiftPackageReference section */
-		A21A33D92F7A0065005E5098 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 12.11.0;
-			};
-		};
-		A21A33EA2F7A0234005E5098 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/google/GoogleSignIn-iOS";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 9.1.0;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		A21A33DA2F7A0065005E5098 /* FirebaseAnalytics */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = A21A33D92F7A0065005E5098 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = FirebaseAnalytics;
-		};
-		A21A33DC2F7A0065005E5098 /* FirebaseAuth */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = A21A33D92F7A0065005E5098 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = FirebaseAuth;
-		};
-		A21A33DE2F7A0065005E5098 /* FirebaseFirestore */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = A21A33D92F7A0065005E5098 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = FirebaseFirestore;
-		};
-		A21A33E02F7A0065005E5098 /* FirebaseMessaging */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = A21A33D92F7A0065005E5098 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = FirebaseMessaging;
-		};
-		A21A33E22F7A0065005E5098 /* FirebaseStorage */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = A21A33D92F7A0065005E5098 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = FirebaseStorage;
-		};
-		A21A33EB2F7A0234005E5098 /* GoogleSignIn */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = A21A33EA2F7A0234005E5098 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
-			productName = GoogleSignIn;
-		};
-		A21A33ED2F7A0234005E5098 /* GoogleSignInSwift */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = A21A33EA2F7A0234005E5098 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
-			productName = GoogleSignInSwift;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = A21A33C12F79FDC9005E5098 /* Project object */;
 }

@@ -5,8 +5,6 @@
 //  Created by Mateo on 29/03/26.
 //
 import Foundation
-import FirebaseFirestore
-import FirebaseAuth
 import Combine
 
 import Foundation
@@ -115,7 +113,22 @@ class StickersViewModel: ObservableObject {
     
     // MARK: - Generador de Estructura (Plantilla)
     private static func generateInitialStructure() -> [AlbumGroup] {
-        // 1. Tu lista exacta de 48 países con sus códigos correspondientes
+        // 1. Definición del grupo especial inicial
+        let specialGroupCode = "FWC"
+        let specialCountry = Country(
+            id: UUID().uuidString,
+            name: "FIFA World Cup",
+            code: specialGroupCode,
+            stickers: (1...20).map { Sticker(id: "\(specialGroupCode) \($0)", number: $0, count: 0) }
+        )
+        
+        let fwcGroup = AlbumGroup(
+            id: "G-SPECIAL",
+            name: "Especiales FWC",
+            countries: [specialCountry]
+        )
+        
+        // 2. Tu lista exacta de 48 países
         let rawData: [(name: String, code: String)] = [
             ("México", "MEX"), ("Sudáfrica", "RSA"), ("Corea del Sur", "KOR"), ("Chequia", "CHK"),
             ("Canadá", "CAN"), ("Bosnia", "BOS"), ("Qatar", "QAT"), ("Suiza", "SUI"),
@@ -131,11 +144,12 @@ class StickersViewModel: ObservableObject {
             ("Inglaterra", "ENG"), ("Croacia", "CRO"), ("Ghana", "GHA"), ("Panamá", "PAN")
         ]
         
-        var tempGroups: [AlbumGroup] = []
+        // Iniciamos el array con el grupo FWC
+        var tempGroups: [AlbumGroup] = [fwcGroup]
         let itemsPerGroup = 4
         let alphabet = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L"]
         
-        // 2. Proceso de agrupación de 4 en 4
+        // 3. Proceso de agrupación de los países restantes
         for i in stride(from: 0, to: rawData.count, by: itemsPerGroup) {
             let groupIndex = i / itemsPerGroup
             let groupLetter = groupIndex < alphabet.count ? alphabet[groupIndex] : "\(groupIndex)"
@@ -143,13 +157,12 @@ class StickersViewModel: ObservableObject {
             let endIndex = min(i + itemsPerGroup, rawData.count)
             let chunk = Array(rawData[i..<endIndex])
             
-            // 3. Crear los países para este grupo específico
             let countriesInGroup = chunk.map { data in
                 Country(
                     id: UUID().uuidString,
                     name: data.name,
                     code: data.code,
-                    stickers: (1...20).map { Sticker(id: "\(data.code)-\($0)", number: $0, count: 0) }
+                    stickers: (1...20).map { Sticker(id: "\(data.code) \($0)", number: $0, count: 0) }
                 )
             }
             
