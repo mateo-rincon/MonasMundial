@@ -12,7 +12,17 @@ struct ContentView: View {
     // Instanciamos el ViewModel una sola vez aquí.
     // Al inicializarse, cargará automáticamente el JSON local.
     @StateObject private var stickersVM = StickersViewModel() // Inicialización completa
-    
+    init() {
+        let tabBarAppearance = UITabBarAppearance()
+        tabBarAppearance.configureWithTransparentBackground() // O .configureWithDefaultBackground()
+        // Si quieres que la barra inferior sea oscura pero traslúcida:
+        tabBarAppearance.backgroundColor = UIColor.black.withAlphaComponent(0.2)
+        
+        UITabBar.appearance().standardAppearance = tabBarAppearance
+        if #available(iOS 15.0, *) {
+            UITabBar.appearance().scrollEdgeAppearance = tabBarAppearance
+        }
+    }
     var body: some View {
         TabView {
             // Pestaña 1: Dashboard (Resumen y Progreso)
@@ -31,6 +41,11 @@ struct ContentView: View {
             IntercambiosView(vm: stickersVM)
                 .tabItem {
                     Label("Intercambiar", systemImage: "person.line.dotted.person.fill")
+                }
+            // Pestaña 4: Sincronización Familiar (Manual vía Firebase)
+            SincronizacionManualView(vm: stickersVM)
+                .tabItem {
+                    Label("Grupos", systemImage: "person.2.badge.key.fill")
                 }
         }
         // Aplicamos un color global a los iconos de la TabBar

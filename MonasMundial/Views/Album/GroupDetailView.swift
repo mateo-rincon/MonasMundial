@@ -11,6 +11,22 @@ struct GroupDetailView: View {
     @ObservedObject var vm: StickersViewModel
     let groupID: String
     
+    init(vm: StickersViewModel, groupID: String) {
+        self.vm = vm
+        self.groupID = groupID
+        
+        // Configuramos la apariencia para iOS 15/16
+        let appearance = UINavigationBarAppearance()
+        appearance.configureWithTransparentBackground()
+        appearance.titleTextAttributes = [.foregroundColor: UIColor.white]
+        appearance.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
+        
+        // Esto quita la línea divisoria y aplica el estilo al "Back"
+        UINavigationBar.appearance().standardAppearance = appearance
+        UINavigationBar.appearance().scrollEdgeAppearance = appearance
+        UINavigationBar.appearance().compactAppearance = appearance
+        UINavigationBar.appearance().tintColor = .white // Color del botón "Back"
+    }
     var body: some View {
         ZStack {
             // 🔵 USAMOS EL MISMO FONDO QUE EL DASHBOARD
@@ -80,12 +96,16 @@ struct GroupDetailView: View {
             }
         }
         .navigationBarTitleDisplayMode(.inline)
+        .toolbarBackground(.hidden, for: .navigationBar)
+        // 💡 Si usas un TabView, esto limpia la barra inferior:
+        .toolbarBackground(.hidden, for: .tabBar)
     }
 }
 struct CompactStickerButton: View {
     let sticker: Sticker
     let onAdd: () -> Void
     let onRemove: () -> Void
+    
     
     @State private var isPressed = false
     
@@ -126,6 +146,7 @@ struct CompactStickerButton: View {
             .onTapGesture {
                 isPressed = true
                 onAdd()
+                
                 UIImpactFeedbackGenerator(style: .light).impactOccurred()
                 // El retraso debe ser suficiente para que el usuario vea el hundimiento
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.12) {

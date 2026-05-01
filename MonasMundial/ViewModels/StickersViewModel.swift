@@ -6,14 +6,19 @@
 //
 import Foundation
 import Combine
+import FirebaseDatabase
+import UIKit
 
-import Foundation
-import SwiftUI
 
 class StickersViewModel: ObservableObject {
     
     // 📂 Estructura jerárquica con el 'count' dentro de cada Sticker
     @Published var groups: [AlbumGroup] = []
+    @Published var isSharedMode: Bool = false
+    @Published var currentSessionID: String? = nil
+        
+    private var syncManager = FirebaseSyncManager()
+    private var firebaseHandler: UInt?
     
     // 📊 Stats para el Dashboard (Actualizadas síncronamente)
     @Published var statsOwned: Int = 0
@@ -58,15 +63,16 @@ class StickersViewModel: ObservableObject {
                     let newVal = max(0, oldVal + delta)
                     
                     if oldVal != newVal {
-                        // 1. Actualizamos el valor directamente
                         groups[gIndex].countries[cIndex].stickers[sIndex].count = newVal
-                        
-                        // 2. Actualizamos estadísticas en el mismo paso
                         updateIncrementalStats(old: oldVal, new: newVal)
                         
-                        // 3. Feedback y Guardado instantáneo
                         UIImpactFeedbackGenerator(style: .light).impactOccurred()
                         saveData()
+                        
+                        // --- NUEVO: Sincronización automática ---
+                        if isSharedMode, let id = currentSessionID {
+                                    syncManager.uploadForSync(groups: self.groups, sessionID: id) { _ in }
+                                }
                     }
                     return
                 }
@@ -177,7 +183,121 @@ class StickersViewModel: ObservableObject {
         
         return tempGroups
     }
+    
+    // MARK : Sync  on firebase
+    func syncFromFirebase(newGroups: [AlbumGroup]) {
+        // 1. Actualizamos la fuente de verdad
+        self.groups = newGroups
+        
+        // 2. Recalculamos las estadísticas para que el dashboard cambie
+        recalculateFullStats()
+        
+        // 3. Guardamos en el archivo local para que el cambio sea permanente
+        saveData()
+        
+        // 4. Feedback visual (opcional)
+        UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
+    }
+    
+    // --- FUNCIÓN PARA ACTIVAR EL MODO COMPARTIDO ---
+    func connectToFamily(sessionID: String) {
+        self.currentSessionID = sessionID
+        self.isSharedMode = true
+        
+        // 🔥 ELIMINAMOS uploadCurrentState() DE AQUÍ
+        // Porque si no, el que se une pisa los datos de la nube inmediatamente.
+
+        // 2. Solo empezamos a escuchar los cambios
+        firebaseHandler = syncManager.startLiveSync(sessionID: sessionID) { [weak self] nuevosGrupos in
+            DispatchQueue.main.async {
+                // Usamos una comparación más eficiente para evitar bucles
+                if self?.groups.description != nuevosGrupos.description {
+                    self?.groups = nuevosGrupos
+                    self?.recalculateFullStats()
+                    self?.saveData()
+                    print("☁️ Datos recibidos de la nube")
+                }
+            }
+        }
+    }
+    
+
+
+    // CASO A: Tú creas el código (Tú mandas tus monas a la nube)
+    func crearGrupoFamiliar() {
+        let nuevoID = Int.random(in: 100000...999999).description
+        self.currentSessionID = nuevoID
+        
+        // Subimos lo que ya tenemos en el iPhone
+        syncManager.uploadForSync(groups: self.groups, sessionID: nuevoID) { success in
+            if success {
+                DispatchQueue.main.async {
+                    self.connectToFamily(sessionID: nuevoID)
+                }
+            }
+        }
+    }
+
+    // CASO B: Te unes a un código (Recibes las monas de la nube)
+    
+    func unirseAGrupo(id: String) {
+        // 1. Bloqueamos cualquier subida accidental poniendo el ID en nil primero
+        self.currentSessionID = nil
+        self.isSharedMode = false
+        
+        syncManager.downloadForSync(sessionID: id) { [weak self] gruposNube in
+            guard let self = self, let gruposNube = gruposNube else { return }
+            
+            DispatchQueue.main.async {
+                // 2. Primero: Cambiamos los datos locales por los de la nube
+                self.groups = gruposNube
+                self.recalculateFullStats()
+                self.saveData()
+                
+                // 3. Pequeño retraso de seguridad (0.5s)
+                // Esto asegura que SwiftUI y las variables locales ya tengan
+                // los datos de la nube antes de abrir el "cable" de Firebase
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    self.currentSessionID = id
+                    self.isSharedMode = true
+                    self.connectToFamily(sessionID: id)
+                    
+                    print("✅ Sincronización establecida: La nube mandó sobre lo local.")
+                }
+            }
+        }
+    }
+    // En StickersViewModel.swift
+    func disconnectFromFamily() { // <--- Sin paréntesis en la definición de la variable
+        if let handler = firebaseHandler, let sessionID = currentSessionID {
+            syncManager.stopLiveSync(sessionID: sessionID, handle: handler)
+        }
+        self.isSharedMode = false
+        self.currentSessionID = nil
+        self.firebaseHandler = nil
+    }
+    func uploadCurrentState() {
+        // 1. Verificamos que tengamos un ID de sesión activo
+        guard let sessionID = currentSessionID else {
+            print("⚠️ No hay ID de sesión para subir datos.")
+            return
+        }
+        
+        // 2. Llamamos al manager para subir los grupos actuales
+        // Nota: Asegúrate de que tu uploadForSync en el Manager acepte (groups, sessionID)
+        syncManager.uploadForSync(groups: self.groups, sessionID: sessionID) { success in
+            DispatchQueue.main.async {
+                if success {
+                    print("☁️ Nube sincronizada exitosamente (ID: \(sessionID))")
+                } else {
+                    print("❌ Error al intentar sincronizar con la nube.")
+                }
+            }
+        }
+    }
 }
+
+
 
 // MARK: - Helpers para la Vista (Corregidos para la nueva estructura)
 extension StickersViewModel {
